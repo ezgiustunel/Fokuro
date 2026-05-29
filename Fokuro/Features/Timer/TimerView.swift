@@ -9,7 +9,6 @@ struct TimerView: View {
     // Injected by parent so a single source of truth drives the entire app
     @Binding var isDarkMode: Bool
     @Binding var selectedSound: AmbientSound
-    @Binding var ambientVolume: Double
 
     let audioService: AudioService
 
@@ -239,11 +238,9 @@ struct TimerView: View {
 
     private var soundSection: some View {
         SoundPickerView(
-            selectedSound:    $selectedSound,
-            volume:           $ambientVolume,
-            mode:             viewModel.currentMode,
-            onSoundSelected:  { sound in viewModel.soundSelected(sound) },
-            onVolumeChanged:  { vol   in audioService.setVolume(Float(vol)) }
+            selectedSound:   $selectedSound,
+            mode:            viewModel.currentMode,
+            onSoundSelected: { sound in viewModel.soundSelected(sound) }
         )
     }
 }
@@ -310,7 +307,6 @@ private struct CircleButton: View {
         viewModel:     vm,
         isDarkMode:    .constant(true),
         selectedSound: .constant(.none),
-        ambientVolume: .constant(0.5),
         audioService:  AudioService()
     )
 }
