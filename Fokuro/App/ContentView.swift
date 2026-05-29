@@ -12,7 +12,6 @@ struct ContentView: View {
 
     @AppStorage("isDarkMode")    private var isDarkMode:       Bool   = true
     @AppStorage("selectedSound") private var selectedSoundRaw: String = AmbientSound.none.rawValue
-    @AppStorage("ambientVolume") private var ambientVolume:    Double = 0.5
 
     private var selectedSoundBinding: Binding<AmbientSound> {
         Binding(
@@ -27,7 +26,6 @@ struct ContentView: View {
                 viewModel:     timerVM,
                 isDarkMode:    $isDarkMode,
                 selectedSound: selectedSoundBinding,
-                ambientVolume: $ambientVolume,
                 audioService:  audioService
             )
 

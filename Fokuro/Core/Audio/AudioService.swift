@@ -20,7 +20,8 @@ final class AudioService: AudioServiceProtocol, ObservableObject {
 
     // MARK: - Private
 
-    private var player: AVAudioPlayer?
+    private var player:           AVAudioPlayer?
+    private var completionPlayer: AVAudioPlayer?
 
     // MARK: - Init
 
@@ -69,7 +70,20 @@ final class AudioService: AudioServiceProtocol, ObservableObject {
 
     func playCompletionSound() {
         pause()
-        AudioServicesPlaySystemSound(1005)
+        guard let url = Bundle.main.url(forResource: "completion", withExtension: "mp3") else {
+            AudioServicesPlaySystemSound(1005)
+            return
+        }
+        do {
+            completionPlayer               = try AVAudioPlayer(contentsOf: url)
+            completionPlayer?.volume       = 1.0
+            completionPlayer?.numberOfLoops = 0
+            completionPlayer?.prepareToPlay()
+            completionPlayer?.play()
+        } catch {
+            print("AudioService: completion sound error – \(error)")
+            AudioServicesPlaySystemSound(1005)
+        }
     }
 
     // MARK: - Private helpers
