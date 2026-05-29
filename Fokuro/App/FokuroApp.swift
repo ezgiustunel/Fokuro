@@ -1,9 +1,14 @@
 import SwiftUI
+import GoogleMobileAds
 
 @main
 struct FokuroApp: App {
 
     @Environment(\.scenePhase) private var scenePhase
+
+    init() {
+        MobileAds.shared.start()
+    }
 
     @StateObject private var audioService = AudioService()
 

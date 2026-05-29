@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9BDC9B562FC9FA6A00BED7FF /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 9BDC9B552FC9FA6A00BED7FF /* GoogleMobileAds */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		9BDC9AC42FBB4C5200BED7FF /* Fokuro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fokuro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BDC9B562FC9FA6A00BED7FF /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = Fokuro;
 			packageProductDependencies = (
+				9BDC9B552FC9FA6A00BED7FF /* GoogleMobileAds */,
 			);
 			productName = Fokuro;
 			productReference = 9BDC9AC42FBB4C5200BED7FF /* Fokuro.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 9BDC9ABB2FBB4C5200BED7FF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9BDC9B542FC9FA6A00BED7FF /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9BDC9AC52FBB4C5200BED7FF /* Products */;
 			projectDirPath = "";
@@ -347,6 +356,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9BDC9B542FC9FA6A00BED7FF /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9BDC9B552FC9FA6A00BED7FF /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BDC9B542FC9FA6A00BED7FF /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9BDC9ABC2FBB4C5200BED7FF /* Project object */;
 }
