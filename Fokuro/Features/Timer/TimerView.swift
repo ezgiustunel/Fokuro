@@ -35,7 +35,7 @@ struct TimerView: View {
 
                 timerRingSection
 
-                Spacer()
+                Spacer(minLength: 0)
 
                 sessionTracker
                     .padding(.bottom, 28)
@@ -45,6 +45,9 @@ struct TimerView: View {
 
                 soundSection
                     .padding(.bottom, 16)
+
+                Spacer(minLength: 0)
+                    .frame(maxHeight: 24)
             }
         }
         .preferredColorScheme(isDarkMode ? .dark : .light)

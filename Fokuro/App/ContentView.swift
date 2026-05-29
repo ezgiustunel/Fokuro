@@ -29,9 +29,9 @@ struct ContentView: View {
                 audioService:  audioService
             )
 
-            // Banner reklam alanı (Faz 2)
-            Color.clear
-                .frame(height: 50)
+            // Banner reklam
+            BannerAdView()
+                .padding(.bottom, 8)
         }
         .preferredColorScheme(isDarkMode ? .dark : .light)
     }
