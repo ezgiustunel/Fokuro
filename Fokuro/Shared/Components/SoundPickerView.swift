@@ -1,59 +1,30 @@
 import SwiftUI
 
 // MARK: - SoundPickerView
-//
-// A horizontally scrolling chip list for picking ambient sounds,
-// plus a volume slider that appears when a sound is selected.
 
 struct SoundPickerView: View {
 
     @Binding var selectedSound: AmbientSound
-    @Binding var volume:        Double
     var mode: TimerMode = .focus
     let onSoundSelected: (AmbientSound) -> Void
-    let onVolumeChanged:  (Double) -> Void
 
     var body: some View {
-        VStack(spacing: 14) {
-            // ── Sound chips ───────────────────────────────────────────────
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    ForEach(AmbientSound.allCases) { sound in
-                        SoundChip(
-                            sound:      sound,
-                            isSelected: selectedSound == sound,
-                            accent:     Color.fokuroAccent(for: mode),
-                            onTap: {
-                                selectedSound = sound
-                                onSoundSelected(sound)
-                            }
-                        )
-                    }
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 10) {
+                ForEach(AmbientSound.allCases) { sound in
+                    SoundChip(
+                        sound:      sound,
+                        isSelected: selectedSound == sound,
+                        accent:     Color.fokuroAccent(for: mode),
+                        onTap: {
+                            selectedSound = sound
+                            onSoundSelected(sound)
+                        }
+                    )
                 }
-                .padding(.horizontal, 20)
             }
-
-            // ── Volume slider (only when something is playing) ────────────
-            if selectedSound != .none {
-                HStack(spacing: 12) {
-                    Image(systemName: "speaker.fill")
-                        .font(.caption)
-                        .foregroundStyle(.fokuroSubtext)
-
-                    Slider(value: $volume, in: 0...1) { _ in
-                        onVolumeChanged(volume)
-                    }
-                    .tint(Color.fokuroAccent(for: mode))
-
-                    Image(systemName: "speaker.wave.3.fill")
-                        .font(.caption)
-                        .foregroundStyle(.fokuroSubtext)
-                }
-                .padding(.horizontal, 28)
-                .transition(.opacity.combined(with: .move(edge: .bottom)))
-            }
+            .padding(.horizontal, 20)
         }
-        .animation(.easeInOut(duration: 0.2), value: selectedSound)
     }
 }
 
@@ -98,10 +69,8 @@ private struct SoundChip: View {
     ZStack {
         Color.fokuroBackground.ignoresSafeArea()
         SoundPickerView(
-            selectedSound: .constant(.rain),
-            volume:        .constant(0.6),
-            onSoundSelected: { _ in },
-            onVolumeChanged:  { _ in }
+            selectedSound:   .constant(.rain),
+            onSoundSelected: { _ in }
         )
     }
 }

@@ -21,7 +21,6 @@ struct SettingsView: View {
                     VStack(spacing: 20) {
                         timerDurationsSection
                         appearanceSection
-                        audioSection
                         aboutSection
                     }
                     .padding(.horizontal, 20)
@@ -91,39 +90,6 @@ struct SettingsView: View {
                 Toggle("", isOn: $viewModel.isDarkMode)
                     .tint(.fokuroFocus)
             }
-        }
-    }
-
-    private var audioSection: some View {
-        SettingsCard(title: "Ambient Sound", icon: "speaker.wave.2.fill") {
-            VStack(alignment: .leading, spacing: 14) {
-                ForEach(AmbientSound.allCases) { sound in
-                    SoundRow(
-                        sound:      sound,
-                        isSelected: viewModel.selectedSound == sound,
-                        onTap: { viewModel.selectSound(sound) }
-                    )
-                }
-
-                if viewModel.selectedSound != .none {
-                    Divider().background(Color.fokuroBorder)
-
-                    HStack(spacing: 12) {
-                        Image(systemName: "speaker.fill")
-                            .font(.caption)
-                            .foregroundStyle(.fokuroSubtext)
-                        Slider(value: $viewModel.ambientVolume, in: 0...1) { _ in
-                            viewModel.updateVolume(viewModel.ambientVolume)
-                        }
-                        .tint(.fokuroFocus)
-                        Image(systemName: "speaker.wave.3.fill")
-                            .font(.caption)
-                            .foregroundStyle(.fokuroSubtext)
-                    }
-                    .transition(.opacity.combined(with: .move(edge: .bottom)))
-                }
-            }
-            .animation(.easeInOut(duration: 0.2), value: viewModel.selectedSound)
         }
     }
 
@@ -240,36 +206,6 @@ private struct DurationStepper: View {
     }
 }
 
-// MARK: - SoundRow
-
-private struct SoundRow: View {
-    let sound:      AmbientSound
-    let isSelected: Bool
-    let onTap:      () -> Void
-
-    var body: some View {
-        Button(action: onTap) {
-            HStack(spacing: 12) {
-                Image(systemName: sound.icon)
-                    .font(.system(size: 16))
-                    .foregroundStyle(isSelected ? Color.fokuroFocus : Color.fokuroSubtext)
-                    .frame(width: 22)
-
-                Text(sound.displayName)
-                    .foregroundStyle(.fokuroText)
-
-                Spacer()
-
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(Color.fokuroFocus)
-                        .transition(.scale.combined(with: .opacity))
-                }
-            }
-        }
-        .buttonStyle(.plain)
-    }
-}
 
 // MARK: - Preview
 
