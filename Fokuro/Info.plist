@@ -12,8 +12,9 @@
 		<string>LaunchBackground</string>
 	</dict>
     <key>GADApplicationIdentifier</key>
-    <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~1458002511 -->
     <string>ca-app-pub-1729511345070865~3648863328</string>
+    <key>NSUserTrackingUsageDescription</key>
+    <string>Fokuro uses this to show you relevant ads and support the app.</string>
     <key>SKAdNetworkItems</key>
     <array>
       <dict>
