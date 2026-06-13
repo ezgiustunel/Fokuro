@@ -84,6 +84,7 @@ protocol TimerServiceProtocol: AnyObject {
     func reset()
     func skip()
     func setMode(_ mode: TimerMode)
+    func addTime(_ seconds: Int)
     func updateDurations(work: Int, shortBreak: Int, longBreak: Int)
 
     // MARK: App-lifecycle hooks

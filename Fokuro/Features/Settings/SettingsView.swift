@@ -28,7 +28,7 @@ struct SettingsView: View {
                     .padding(.bottom, 32)
                 }
             }
-            .navigationTitle("Ayarlar")
+            .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(Color.fokuroBackground, for: .navigationBar)
             .toolbarColorScheme(viewModel.isDarkMode ? .dark : .light, for: .navigationBar)
