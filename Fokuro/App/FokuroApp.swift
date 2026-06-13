@@ -1,5 +1,4 @@
 import SwiftUI
-import GoogleMobileAds
 
 @main
 struct FokuroApp: App {
@@ -7,7 +6,9 @@ struct FokuroApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
-        MobileAds.shared.start()
+        // ATTService requests tracking permission, then starts Mobile Ads SDK.
+        // MobileAds.shared.start() must NOT be called before ATT resolves.
+        ATTService.shared.requestAndInitialiseAds()
     }
 
     @StateObject private var audioService = AudioService()

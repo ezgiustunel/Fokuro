@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import StoreKit
 
 @MainActor
 final class TimerViewModel: ObservableObject {
@@ -192,8 +193,24 @@ final class TimerViewModel: ObservableObject {
         if mode == .focus {
             todayCompletedPomodoros += 1
             UserDefaults.standard.set(todayCompletedPomodoros, forKey: statsKey)
+            requestReviewIfEligible()
         }
         totalDuration = seconds(for: currentMode)
+    }
+
+    private func requestReviewIfEligible() {
+        let totalCompleted = UserDefaults.standard.integer(forKey: "totalCompletedPomodoros") + 1
+        UserDefaults.standard.set(totalCompleted, forKey: "totalCompletedPomodoros")
+
+        // 3. oturumda ve ardından her 20 oturumda bir sor
+        let shouldRequest = totalCompleted == 3 || (totalCompleted > 3 && totalCompleted % 20 == 0)
+        guard shouldRequest else { return }
+
+        guard let scene = UIApplication.shared.connectedScenes
+            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
+        else { return }
+
+        SKStoreReviewController.requestReview(in: scene)
     }
 
     private func seconds(for mode: TimerMode) -> Int {

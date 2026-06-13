@@ -99,7 +99,7 @@ struct SettingsView: View {
                 Text("Fokuro")
                     .foregroundStyle(.fokuroText)
                 Spacer()
-                Text("v1.0.0")
+                Text("v1.3")
                     .foregroundStyle(.fokuroSubtext)
                     .font(.subheadline)
             }
