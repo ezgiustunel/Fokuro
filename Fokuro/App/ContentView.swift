@@ -8,7 +8,8 @@ import SwiftUI
 struct ContentView: View {
 
     @ObservedObject var timerVM: TimerViewModel
-    let audioService: AudioService          // concrete type, no existential boxing
+    let audioService: AudioService              // concrete type, no existential boxing
+    var rewardedAdService: RewardedAdService
 
     @AppStorage("isDarkMode")    private var isDarkMode:       Bool   = true
     @AppStorage("selectedSound") private var selectedSoundRaw: String = AmbientSound.none.rawValue
@@ -21,18 +22,13 @@ struct ContentView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            TimerView(
-                viewModel:     timerVM,
-                isDarkMode:    $isDarkMode,
-                selectedSound: selectedSoundBinding,
-                audioService:  audioService
-            )
-
-            // Banner reklam
-            BannerAdView()
-                .padding(.bottom, 8)
-        }
+        TimerView(
+            viewModel:         timerVM,
+            rewardedAdService: rewardedAdService,
+            isDarkMode:        $isDarkMode,
+            selectedSound:     selectedSoundBinding,
+            audioService:      audioService
+        )
         .preferredColorScheme(isDarkMode ? .dark : .light)
     }
 }
@@ -41,11 +37,12 @@ struct ContentView: View {
 
 #Preview {
     ContentView(
-        timerVM:      TimerViewModel(
+        timerVM:           TimerViewModel(
             timerService:        MockTimerService(),
             audioService:        MockAudioService(),
             notificationService: MockNotificationService()
         ),
-        audioService: AudioService()
+        audioService:      AudioService(),
+        rewardedAdService: RewardedAdService()
     )
 }

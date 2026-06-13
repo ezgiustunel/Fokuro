@@ -42,9 +42,10 @@ final class TimerViewModel: ObservableObject {
 
     // MARK: - Dependencies
 
-    private let timerService:        any TimerServiceProtocol
-    private let audioService:        any AudioServiceProtocol
-    private let notificationService: any NotificationServiceProtocol
+    private let timerService:          any TimerServiceProtocol
+    private let audioService:          any AudioServiceProtocol
+    private let notificationService:   any NotificationServiceProtocol
+    private let interstitialAdService: InterstitialAdService?
 
     // MARK: - Audio state
 
@@ -59,13 +60,15 @@ final class TimerViewModel: ObservableObject {
     // MARK: - Init
 
     init(
-        timerService:        any TimerServiceProtocol,
-        audioService:        any AudioServiceProtocol,
-        notificationService: any NotificationServiceProtocol
+        timerService:          any TimerServiceProtocol,
+        audioService:          any AudioServiceProtocol,
+        notificationService:   any NotificationServiceProtocol,
+        interstitialAdService: InterstitialAdService? = nil
     ) {
-        self.timerService        = timerService
-        self.audioService        = audioService
-        self.notificationService = notificationService
+        self.timerService          = timerService
+        self.audioService          = audioService
+        self.notificationService   = notificationService
+        self.interstitialAdService = interstitialAdService
 
         let work       = workDurationMinutes       * 60
         let shortBreak = shortBreakDurationMinutes * 60
@@ -164,6 +167,15 @@ final class TimerViewModel: ObservableObject {
         totalDuration = seconds(for: mode)
     }
 
+    /// Called after the user successfully watches a rewarded ad.
+    /// Adds 5 minutes to the current break and extends `totalDuration` so
+    /// the progress ring doesn't jump backward.
+    func earnExtraBreak() {
+        let bonus = 5 * 60
+        timerService.addTime(bonus)
+        totalDuration += bonus
+    }
+
     func applySettings() {
         let work       = workDurationMinutes       * 60
         let shortBreak = shortBreakDurationMinutes * 60
@@ -194,8 +206,19 @@ final class TimerViewModel: ObservableObject {
             todayCompletedPomodoros += 1
             UserDefaults.standard.set(todayCompletedPomodoros, forKey: statsKey)
             requestReviewIfEligible()
+            showInterstitialIfEligible()
         }
         totalDuration = seconds(for: currentMode)
+    }
+
+    private func showInterstitialIfEligible() {
+        let totalCompleted = UserDefaults.standard.integer(forKey: "totalCompletedPomodoros")
+        // Her 3 focus session'da bir göster
+        guard totalCompleted % 3 == 0 else { return }
+        // Review isteğiyle çakışmasın (session 3 ve her 20'de bir)
+        let isReviewSession = totalCompleted == 3 || (totalCompleted > 3 && totalCompleted % 20 == 0)
+        guard !isReviewSession else { return }
+        interstitialAdService?.showAd()
     }
 
     private func requestReviewIfEligible() {

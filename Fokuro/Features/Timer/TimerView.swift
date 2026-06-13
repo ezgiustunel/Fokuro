@@ -5,6 +5,7 @@ import SwiftUI
 struct TimerView: View {
 
     @ObservedObject var viewModel: TimerViewModel
+    var rewardedAdService: RewardedAdService
 
     // Injected by parent so a single source of truth drives the entire app
     @Binding var isDarkMode: Bool
@@ -17,6 +18,7 @@ struct TimerView: View {
     @State private var showSettings = false
     @State private var controlsScale: CGFloat = 1
 
+
     // MARK: - Body
 
     var body: some View {
@@ -26,28 +28,29 @@ struct TimerView: View {
             VStack(spacing: 0) {
                 navigationBar
                     .padding(.horizontal, 24)
-                    .padding(.top, 8)
 
                 Spacer()
+                    .frame(maxHeight: 24)
 
                 modeSelector
-                    .padding(.bottom, 32)
+                    .padding(.bottom, 28)
 
                 timerRingSection
 
                 Spacer(minLength: 0)
-
-                sessionTracker
-                    .padding(.bottom, 28)
+                    .frame(maxHeight: 32)
 
                 controlButtons
-                    .padding(.bottom, 24)
+                    .padding(.bottom, 32)
 
                 soundSection
+                    .padding(.bottom, 32)
+
+                sessionTracker
                     .padding(.bottom, 16)
 
                 Spacer(minLength: 0)
-                    .frame(maxHeight: 24)
+                    .frame(maxHeight: 16)
             }
         }
         .preferredColorScheme(isDarkMode ? .dark : .light)
@@ -237,6 +240,45 @@ struct TimerView: View {
         }
     }
 
+    // MARK: - Reward button
+
+    private var isBreakMode: Bool {
+        viewModel.currentMode == .shortBreak || viewModel.currentMode == .longBreak
+    }
+
+    private var rewardButton: some View {
+        Button {
+            rewardedAdService.showAd {
+                viewModel.earnExtraBreak()
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "play.rectangle.fill")
+                    .font(.system(size: 14, weight: .semibold))
+                Text(String(localized: "+5 min break · Watch ad"))
+                    .font(.system(size: 14, weight: .semibold))
+            }
+            .foregroundStyle(rewardedAdService.isAdReady ? .black : Color.fokuroMuted)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
+            .background(
+                Capsule()
+                    .fill(rewardedAdService.isAdReady
+                          ? Color.fokuroAccent(for: viewModel.currentMode)
+                          : Color.fokuroSurface)
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.fokuroBorder, lineWidth: rewardedAdService.isAdReady ? 0 : 0.5)
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+        .disabled(!isBreakMode || !rewardedAdService.isAdReady)
+        .opacity(isBreakMode ? 1 : 0)
+        .animation(.easeInOut(duration: 0.25), value: isBreakMode)
+        .animation(.easeInOut(duration: 0.2), value: rewardedAdService.isAdReady)
+    }
+
     // MARK: - Sound picker section
 
     private var soundSection: some View {
@@ -307,9 +349,10 @@ private struct CircleButton: View {
     )
 
     return TimerView(
-        viewModel:     vm,
-        isDarkMode:    .constant(true),
-        selectedSound: .constant(.none),
-        audioService:  AudioService()
+        viewModel:         vm,
+        rewardedAdService: RewardedAdService(),
+        isDarkMode:        .constant(true),
+        selectedSound:     .constant(.none),
+        audioService:      AudioService()
     )
 }
