@@ -29,17 +29,21 @@ struct FokuroApp: App {
         ))
     }
 
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     @State private var showSplash = true
 
     var body: some Scene {
         WindowGroup {
             ZStack {
-                ContentView(
-                    timerVM:           timerVM,
-                    audioService:      audioService,
-                    rewardedAdService: rewardedAdService
-                )
-                .opacity(showSplash ? 0 : 1)
+                if hasSeenOnboarding {
+                    ContentView(
+                        timerVM:           timerVM,
+                        audioService:      audioService,
+                        rewardedAdService: rewardedAdService
+                    )
+                } else {
+                    OnboardingView()
+                }
 
                 if showSplash {
                     SplashView()
