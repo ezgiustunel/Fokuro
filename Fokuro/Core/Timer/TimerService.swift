@@ -92,6 +92,11 @@ final class TimerService: TimerServiceProtocol, ObservableObject {
         segmentStartRemaining = d
     }
 
+    func addTime(_ seconds: Int) {
+        timeRemaining         += seconds
+        segmentStartRemaining += seconds
+    }
+
     func updateDurations(work: Int, shortBreak: Int, longBreak: Int) {
         workDuration       = work
         shortBreakDuration = shortBreak
@@ -208,6 +213,7 @@ final class MockTimerService: TimerServiceProtocol {
     func reset() {}
     func skip()  {}
     func setMode(_ mode: TimerMode) {}
+    func addTime(_ seconds: Int)    {}
     func updateDurations(work: Int, shortBreak: Int, longBreak: Int) {}
     func handleBackground() {}
     func handleForeground() {}

@@ -28,7 +28,7 @@ struct SettingsView: View {
                     .padding(.bottom, 32)
                 }
             }
-            .navigationTitle("Ayarlar")
+            .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(Color.fokuroBackground, for: .navigationBar)
             .toolbarColorScheme(viewModel.isDarkMode ? .dark : .light, for: .navigationBar)
@@ -99,16 +99,7 @@ struct SettingsView: View {
                 Text("Fokuro")
                     .foregroundStyle(.fokuroText)
                 Spacer()
-                Text("v1.3")
-                    .foregroundStyle(.fokuroSubtext)
-                    .font(.subheadline)
-            }
-            Divider().background(Color.fokuroBorder)
-            HStack {
-                Text("Pomodoro Technique")
-                    .foregroundStyle(.fokuroText)
-                Spacer()
-                Text("Francesco Cirillo")
+                Text("v1.4")
                     .foregroundStyle(.fokuroSubtext)
                     .font(.subheadline)
             }
