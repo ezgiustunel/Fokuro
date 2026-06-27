@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 import StoreKit
+import UserNotifications
 
 @MainActor
 final class TimerViewModel: ObservableObject {
@@ -13,6 +14,10 @@ final class TimerViewModel: ObservableObject {
     @Published private(set) var currentMode:              TimerMode = .focus
     @Published private(set) var completedSessionsInCycle: Int       = 0
     @Published private(set) var todayCompletedPomodoros:  Int       = 0
+    @Published var showNotificationBanner:                Bool      = false
+
+    @AppStorage("hasSeenOnboarding")      private var hasSeenOnboarding      = false
+    @AppStorage("neverAskNotifications")  private var neverAskNotifications  = false
 
     var progress: Double {
         guard totalDuration > 0 else { return 1 }
@@ -113,8 +118,6 @@ final class TimerViewModel: ObservableObject {
 
         let savedSound = UserDefaults.standard.string(forKey: "selectedSound") ?? ""
         selectedSound  = AmbientSound(rawValue: savedSound) ?? .none
-
-        Task { await notificationService.requestPermission() }
     }
 
     // MARK: - Actions
@@ -125,6 +128,7 @@ final class TimerViewModel: ObservableObject {
             notificationService.cancelPendingNotifications()
             audioService.pause()
         } else {
+            checkNotificationBannerIfNeeded()
             timerService.start()
             notificationService.scheduleTimerEnd(mode: currentMode, after: timeRemaining)
             guard selectedSound != .none else { return }
@@ -234,6 +238,20 @@ final class TimerViewModel: ObservableObject {
         else { return }
 
         SKStoreReviewController.requestReview(in: scene)
+    }
+
+    private func checkNotificationBannerIfNeeded() {
+        guard hasSeenOnboarding, !neverAskNotifications else { return }
+        Task {
+            let settings = await UNUserNotificationCenter.current().notificationSettings()
+            guard settings.authorizationStatus != .authorized else { return }
+            showNotificationBanner = true
+        }
+    }
+
+    func dismissNotificationBanner(permanently: Bool) {
+        showNotificationBanner = false
+        if permanently { neverAskNotifications = true }
     }
 
     private func seconds(for mode: TimerMode) -> Int {

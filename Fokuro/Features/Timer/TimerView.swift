@@ -53,6 +53,18 @@ struct TimerView: View {
                     .frame(maxHeight: 16)
             }
         }
+        .overlay(alignment: .bottom) {
+            if viewModel.showNotificationBanner {
+                NotificationPermissionBanner { permanently in
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        viewModel.dismissNotificationBanner(permanently: permanently)
+                    }
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .zIndex(1)
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: viewModel.showNotificationBanner)
         .preferredColorScheme(isDarkMode ? .dark : .light)
         .sheet(isPresented: $showSettings) {
             SettingsView(
